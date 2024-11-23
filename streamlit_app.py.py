@@ -41,7 +41,7 @@ if date_column in data_controls.columns:
 columns_to_exclude = [
     "Date contrôle", "Numéro rue", "Rue", "CP", "Ville", "Secteur", "Agence",
     "Nom de résidence", "Gardien ou prestataire", "Responsable de secteur",
-    "Type de contrôle :", "Météo au moment du contrôle :","Date only","Year-Week","Year-Month"
+    "Type de contrôle :", "Météo au moment du contrôle :","Date only","Year-Week","Year-Month","Prenez une photo de l'extérieur du bâtiment et veuillez confirmer\nAvis global"
     
 
 ] + [
