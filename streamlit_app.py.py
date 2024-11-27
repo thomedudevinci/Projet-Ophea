@@ -179,11 +179,6 @@ elif analysis_type == "Diagrammes interactifs":
         if 'B' in data_controls.columns:
             interactive_stacked_bar_chart('Secteur', f"Répartition par Secteur ({response_column})")
 
-        # Diagramme par Year-Week
-        if 'Year-Week' in data_controls.columns:
-            # Convertir en chaîne pour un affichage correct dans les graphiques
-            data_controls['Year-Week'] = data_controls['Year-Week'].astype(str)
-            interactive_stacked_bar_chart('Year-Week', f"Répartition par Semaine ({response_column})")
 
         document_column = f"{response_column}\nDocuments"
         # Vérifier s'il existe une colonne "Document" pour la colonne sélectionnée
