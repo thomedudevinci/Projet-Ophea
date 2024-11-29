@@ -88,7 +88,6 @@ if analysis_type == "Accueil":
     # Chiffres clés
     st.subheader("Chiffres clés")
     st.markdown("""
-    - **17 861 cas de vétusté** relevés, représentant des anomalies structurelles liées à l’usure naturelle du bâti (murs, sols, plafonds, balcons, etc.).
     - **1319 entrées contrôlées**.
     - **8 contrôleurs** mobilisés.
     - **21 jours de contrôles**.
