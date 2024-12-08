@@ -131,7 +131,7 @@ elif analysis_type == "Diagrammes interactifs":
     response_column = st.selectbox("Choisissez une colonne pour l'analyse", available_columns)
     if response_column in ["Préconisations :\nAvis global","Que faudrait-il faire pour améliorer cette entrée ?\nAvis global","Préconisations :\nAvis global","Prenez une photo de l'extérieur du bâtiment et veuillez confirmer\nAvis global"]+[col for col in data_controls.columns if "nombre d’ampoule hs ?" in col.lower()]:
         st.table(data_controls[response_column].value_counts()) 
-    elif len(data_controls[response_column])>6 :
+    elif len(data_controls[response_column].unique())>6 :
         st.table(data_controls[response_column].value_counts())
     else:
 
