@@ -236,7 +236,7 @@ elif analysis_type == "Diagrammes interactifs":
                             image = Image.open(clean_file_path)
 
                         # Afficher l'image dans la colonne correspondante
-                        cols[j].image(image, use_container_width+=True)
+                        cols[j].image(image, use_container_width=True)
 
                         # Afficher les informations associées sous l'image
                         cols[j].write(f"**Date contrôle** : {row['Date contrôle'].iloc[0]}")
