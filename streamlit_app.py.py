@@ -20,27 +20,10 @@ original_data_controls, original_data_patrimoine, original_data_scraped = load_d
 data_controls = original_data_controls.copy()
 data_patrimoine = original_data_patrimoine.copy()
 
-"""
-# Dictionnaire de correspondance des mois français vers anglais
-mois_fr_en = {
-    "janvier": "January", "février": "February", "mars": "March",
-    "avril": "April", "mai": "May", "juin": "June",
-    "juillet": "July", "août": "August", "septembre": "September",
-    "octobre": "October", "novembre": "November", "décembre": "December"
-}
 
-# Corriger les dates dans les données de contrôle
-date_column = 'Date contrôle'
-if date_column in data_controls.columns:
-    for mois_fr, mois_en in mois_fr_en.items():
-        data_controls[date_column] = data_controls[date_column].str.replace(mois_fr, mois_en, case=False, regex=True)
-    data_controls[date_column] = pd.to_datetime(data_controls[date_column], errors='coerce')
-    data_controls['Date only'] = data_controls[date_column].dt.date
-    data_controls['Year-Week'] = data_controls[date_column].dt.to_period('W')
-    data_controls['Year-Month'] = data_controls[date_column].dt.to_period('M')
-"""
 # Exclure les colonnes non pertinentes
 columns_to_exclude = [
+    "Unnamed: 0","Unnamed: 0.1",
     "Date contrôle", "Numéro rue", "Rue", "CP", "Ville", "Secteur", "Agence",
     "Nom de résidence", "Gardien ou prestataire", "Responsable de secteur",
     "Type de contrôle :", "Météo au moment du contrôle :","Date only","Year-Week","Year-Month","Prenez une photo de l'extérieur du bâtiment et veuillez confirmer\nAvis global"
@@ -167,7 +150,9 @@ elif analysis_type == "Diagrammes interactifs":
                 color=response_column,
                 title=title,
                 barmode='stack',
-                text='Nombre'
+                text='Nombre',
+                width=1000,  # Largeur personnalisée
+                height=600   # Hauteur personnalisée
             )
             fig.update_traces(texttemplate='%{text}', textposition='outside')
             fig.update_layout(xaxis_title=group_by_column, yaxis_title="Nombre de contrôles", uniformtext_minsize=8)
@@ -184,7 +169,11 @@ elif analysis_type == "Diagrammes interactifs":
 
         document_column = f"{response_column}\nDocuments"
         # Vérifier s'il existe une colonne "Document" pour la colonne sélectionnée
-        if response_column.split("\n")[0] in original_data_scraped["Question"].unique():
+        if document_column.split("\n")[0] in original_data_scraped["Question"].unique():
+
+            if "propre" in document_column.lower():
+                interactive_stacked_bar_chart('Météo au moment du contrôle :', f"Répartition par Secteur ({response_column})")
+
             df_question=original_data_scraped[original_data_scraped["Question"]==response_column.split("\n")[0]]
             for i in range(0,len(df_question),4):
                 cols = st.columns(4)
@@ -203,14 +192,21 @@ elif analysis_type == "Diagrammes interactifs":
                             image = Image.open(clean_file_path)
 
                         # Afficher l'image dans la colonne correspondante
-                        cols[j].image(image, use_container_width=True)
+                        cols[j].image(image, width=170)
                         # Afficher les informations associées sous l'image
                         row = df_question[df_question["Image"] == clean_file_path]
-                        cols[j].write(f"**Adresse** : {row['Adresse'].iloc[0]}")
+                        cols[j].write(f"**Numéro rue** : {row['Adresse'].iloc[0].split(' - ')[0]}") 
+
+                        cols[j].write(f"**CP** : {row['Adresse'].iloc[0].split(' - ')[1]}")
+                        cols[j].write(f"**Ville** : {row['Adresse'].iloc[0].split(' - ')[2]}")
+                        cols[j].write(f"**Secteur** : {row['Adresse'].iloc[0].split(' - ')[3].replace('(','').replace(')','')}") 
                     except Exception as e:
-                        pass
+                        print(e)
 
         elif document_column in data_controls.columns:
+            if "propre" in document_column.lower():
+                interactive_stacked_bar_chart('Météo au moment du contrôle :', f"Météo au moment du contrôle : ({response_column})")
+
             st.write(f"### Images associées à la colonne : {document_column}")
 
             # Liste des chemins d'images valides (sans valeurs nulles et sans chemins commençant par "-")
@@ -223,13 +219,11 @@ elif analysis_type == "Diagrammes interactifs":
                     try:
                         # Trouver la ligne correspondante dans le dataframe
                         row = data_controls[data_controls[document_column] == "•"+clean_file_path]
-
                         # Vérifier si c'est une URL valide
                         if clean_file_path.startswith("http"):
                             # Télécharger l'image depuis l'URL
                             response = requests.get(clean_file_path)
                             response.raise_for_status()  # Vérifier les erreurs HTTP
-
                             # Charger l'image à partir des données binaires
                             image = Image.open(io.BytesIO(response.content))
                         else:
@@ -237,16 +231,16 @@ elif analysis_type == "Diagrammes interactifs":
                             image = Image.open(clean_file_path)
 
                         # Afficher l'image dans la colonne correspondante
-                        cols[j].image(image, use_container_width=True)
-
+                        cols[j].image(image, width=170)
                         # Afficher les informations associées sous l'image
                         cols[j].write(f"**Date contrôle** : {row['Date contrôle'].iloc[0]}")
                         cols[j].write(f"**Numéro rue** : {row['Rue'].iloc[0]}")
+
                         cols[j].write(f"**CP** : {row['CP'].iloc[0]}")
                         cols[j].write(f"**Ville** : {row['Ville'].iloc[0]}")
                         cols[j].write(f"**Secteur** : {row['Secteur'].iloc[0]}")
                     except Exception as e:
-                        pass
+                        print(e)
 
 elif analysis_type == "Détail":
     
