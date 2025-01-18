@@ -20,6 +20,7 @@ original_data_controls, original_data_patrimoine, original_data_scraped = load_d
 data_controls = original_data_controls.copy()
 data_patrimoine = original_data_patrimoine.copy()
 
+"""
 # Dictionnaire de correspondance des mois français vers anglais
 mois_fr_en = {
     "janvier": "January", "février": "February", "mars": "March",
@@ -37,7 +38,7 @@ if date_column in data_controls.columns:
     data_controls['Date only'] = data_controls[date_column].dt.date
     data_controls['Year-Week'] = data_controls[date_column].dt.to_period('W')
     data_controls['Year-Month'] = data_controls[date_column].dt.to_period('M')
-
+"""
 # Exclure les colonnes non pertinentes
 columns_to_exclude = [
     "Date contrôle", "Numéro rue", "Rue", "CP", "Ville", "Secteur", "Agence",
