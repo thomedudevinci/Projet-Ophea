@@ -131,7 +131,7 @@ elif analysis_type == "Diagrammes interactifs":
                 hole=0.3
             )
             fig.update_traces(
-                textinfo='label+percent+value',
+                textinfo='none',
                 textposition='outside',
                 pull=[0, 0.2]
             )
